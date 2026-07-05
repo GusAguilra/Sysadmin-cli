@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Gifts/banner.svg" alt="sysadmin-cli" width="800">
+  <img src="Gifts/banner.png" alt="sysadmin-cli" width="800">
 </p>
 
 <p align="center">

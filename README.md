@@ -127,4 +127,4 @@ Los comandos se guardan en `~/.sysadmin-cli/commands.json` y se fusionan con los
 
 ## Licencia
 
-MIT
+GNU General Public License v3.0

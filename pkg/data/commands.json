@@ -1,0 +1,1649 @@
+{
+  "categories": [
+    {
+      "name": "disco",
+      "description": "Diagnostico y gestion de discos y almacenamiento",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Espacio en disco",
+          "description": "Muestra el espacio usado y disponible en particiones montadas",
+          "command": "df -h",
+          "example": "df -h /var/log",
+          "tags": ["disco", "espacio", "uso", "lleno", "particiones"],
+          "notes": "-h = formato legible, -T = tipo de FS, --total = suma total"
+        },
+        {
+          "title": "Espacio por directorio",
+          "description": "Calcula el espacio usado por directorios y archivos",
+          "command": "du -sh *",
+          "example": "du -sh /var/log/* | sort -rh",
+          "tags": ["disco", "espacio", "directorios", "carpetas"],
+          "notes": "-s = resumido, -h = legible, --exclude = omitir rutas"
+        },
+        {
+          "title": "Dispositivos de bloque",
+          "description": "Lista todos los discos y particiones del sistema",
+          "command": "lsblk",
+          "example": "lsblk -f",
+          "tags": ["disco", "dispositivos", "bloque", "particiones"],
+          "notes": "-f = muestra sistema de archivos, -o = columnas personalizadas"
+        },
+        {
+          "title": "Tabla de particiones",
+          "description": "Muestra la tabla de particiones de los discos",
+          "command": "fdisk -l",
+          "example": "fdisk -l /dev/sda",
+          "tags": ["disco", "particiones", "fdisk", "tabla"],
+          "notes": "Requiere sudo en la mayoria de los casos"
+        },
+        {
+          "title": "UUID de particiones",
+          "description": "Muestra los identificadores unicos de cada particion",
+          "command": "blkid",
+          "example": "blkid /dev/sda1",
+          "tags": ["disco", "uuid", "particiones", "identificadores"],
+          "notes": "Util para configurar /etc/fstab por UUID"
+        },
+        {
+          "title": "Estado SMART del disco",
+          "description": "Revisa la salud del disco duro con tecnologia SMART",
+          "command": "smartctl -a /dev/sda",
+          "example": "smartctl -H /dev/sda",
+          "tags": ["disco", "smart", "salud", "diagnostico"],
+          "notes": "Instalar con: apt install smartmontools / brew install smartmontools"
+        },
+        {
+          "title": "Estadisticas de E/S",
+          "description": "Muestra estadisticas de entrada/salida de los discos",
+          "command": "iostat -x 1",
+          "example": "iostat -x 1 5",
+          "tags": ["disco", "estadisticas", "io", "rendimiento"],
+          "notes": "-x = estadisticas extendidas, el numero es el intervalo en segundos"
+        },
+        {
+          "title": "Archivos con links rotos",
+          "description": "Busca archivos con enlaces simbolicos rotos que ocupan espacio",
+          "command": "lsof +L1",
+          "example": "lsof +L1 | head -20",
+          "tags": ["disco", "archivos", "links", "rotos", "lsof"],
+          "notes": "+L1 muestra archivos con link count menor a 1"
+        },
+        {
+          "title": "Archivos grandes",
+          "description": "Busca archivos de gran peso en el sistema",
+          "command": "find / -type f -size +100M -exec ls -lh {} \\;",
+          "example": "find /var -type f -size +50M -exec ls -lh {} \\; 2>/dev/null",
+          "tags": ["disco", "archivos", "grandes", "peso", "busqueda"],
+          "notes": "Cambiar +100M por el filtro deseado, 2>/dev/null oculta errores de permisos"
+        },
+        {
+          "title": "Archivos borrados en uso",
+          "description": "Archivos que fueron borrados pero procesos aun los tienen abiertos",
+          "command": "lsof | grep deleted",
+          "example": "lsof | grep deleted | awk '{print $2}' | sort -u",
+          "tags": ["disco", "archivos", "borrados", "procesos", "lsof"],
+          "notes": "Ayuda a liberar espacio reiniciando los procesos que retienen los archivos"
+        },
+        {
+          "title": "Puntos de montaje",
+          "description": "Muestra los sistemas de archivos montados actualmente",
+          "command": "mount | column -t",
+          "example": "mount | grep /dev/sd",
+          "tags": ["disco", "montaje", "puntos", "mount"],
+          "notes": "column -t formatea la salida en columnas alineadas"
+        },
+        {
+          "title": "Informacion del FS",
+          "description": "Muestra parametros detallados del sistema de archivos",
+          "command": "tune2fs -l /dev/sda1",
+          "example": "tune2fs -l /dev/sda1 | grep -i 'block count\\|mount count'",
+          "tags": ["disco", "filesystem", "parametros", "tune2fs"],
+          "notes": "Requiere sudo, muestra bloques, montajes, errores y mas"
+        }
+      ]
+    },
+    {
+      "name": "memoria",
+      "description": "Monitoreo de memoria RAM y swap",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Uso de memoria",
+          "description": "Muestra el uso de memoria RAM y swap en formato legible",
+          "command": "free -h",
+          "example": "free -m",
+          "tags": ["memoria", "ram", "swap", "uso", "libre"],
+          "notes": "-h = legible, -m = megabytes, -s = intervalo en segundos"
+        },
+        {
+          "title": "Estadisticas de memoria virtual",
+          "description": "Monitorea memoria virtual, procesos, E/S y CPU",
+          "command": "vmstat 1",
+          "example": "vmstat -s",
+          "tags": ["memoria", "vmstat", "estadisticas", "virtual"],
+          "notes": "Sin argumentos muestra promedios, con numero muestra cada N segundos"
+        },
+        {
+          "title": "Informacion detallada de memoria",
+          "description": "Muestra informacion completa de la memoria del sistema",
+          "command": "cat /proc/meminfo",
+          "example": "cat /proc/meminfo | grep Mem",
+          "tags": ["memoria", "detalle", "proc", "info"],
+          "notes": "Archivo virtual del kernel con toda la informacion de memoria"
+        },
+        {
+          "title": "Procesos por uso de RAM",
+          "description": "Muestra procesos ordenados por consumo de memoria",
+          "command": "ps aux --sort=-%mem",
+          "example": "ps aux --sort=-%mem | head -10",
+          "tags": ["memoria", "procesos", "consumo", "orden"],
+          "notes": "--sort=-%mem ordena de mayor a menor uso de memoria"
+        },
+        {
+          "title": "Swap activa",
+          "description": "Muestra las particiones o archivos de swap en uso",
+          "command": "swapon --show",
+          "example": "swapon --summary",
+          "tags": ["memoria", "swap", "particiones", "activa"],
+          "notes": "Muestra capacidad, prioridad y tipo de cada swap"
+        },
+        {
+          "title": "Memoria por proceso",
+          "description": "Muestra memoria residente, virtual y compartida por proceso",
+          "command": "smem -t -p",
+          "example": "smem -t -p | head -15",
+          "tags": ["memoria", "procesos", "smem", "rss", "pss"],
+          "notes": "Requiere instalar smem. -p = porcentajes, -t = total"
+        },
+        {
+          "title": "Mensajes de memoria del kernel",
+          "description": "Busca mensajes relacionados con memoria en el log del kernel",
+          "command": "dmesg | grep -i memory",
+          "example": "dmesg | grep -i 'out of memory\\|oom'",
+          "tags": ["memoria", "kernel", "dmesg", "errores", "oom"],
+          "notes": "Util para diagnosticar problemas de falta de memoria (OOM)"
+        },
+        {
+          "title": "Cache y buffers",
+          "description": "Muestra el uso de cache y buffers del sistema",
+          "command": "cat /proc/meminfo | grep -E '^(Buffers|Cached|SReclaimable)'",
+          "example": "cat /proc/meminfo | grep -E '^(Buffers|Cached)'",
+          "tags": ["memoria", "cache", "buffers", "kernel"],
+          "notes": "La cache se libera automaticamente cuando otras aplicaciones la necesitan"
+        }
+      ]
+    },
+    {
+      "name": "red",
+      "description": "Puertos, conectividad y diagnostico de red",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Puertos TCP en escucha",
+          "description": "Muestra los puertos TCP abiertos en el equipo",
+          "command": "ss -tlnp",
+          "example": "ss -tlnp | grep :80",
+          "tags": ["red", "puertos", "tcp", "escucha", "ss"],
+          "notes": "-t = TCP, -l = listening, -n = numerico, -p = proceso"
+        },
+        {
+          "title": "Puertos UDP en escucha",
+          "description": "Muestra los puertos UDP abiertos en el equipo",
+          "command": "ss -ulnp",
+          "example": "ss -ulnp | grep :53",
+          "tags": ["red", "puertos", "udp", "escucha", "ss"],
+          "notes": "-u = UDP, -l = listening, -n = numerico, -p = proceso"
+        },
+        {
+          "title": "Puertos con netstat",
+          "description": "Lista todos los puertos abiertos con sus procesos",
+          "command": "netstat -tulpn",
+          "example": "netstat -tulpn | grep LISTEN",
+          "tags": ["red", "puertos", "netstat", "procesos"],
+          "notes": "Alternativa a ss, -tulpn = TCP/UDP/Listening/Numerico/Proceso"
+        },
+        {
+          "title": "Puertos en uso con lsof",
+          "description": "Muestra que procesos estan usando cada puerto",
+          "command": "lsof -i -P -n",
+          "example": "lsof -i :80",
+          "tags": ["red", "puertos", "lsof", "procesos"],
+          "notes": "-P = puertos en numero, -n = no resolver DNS"
+        },
+        {
+          "title": "Interfaces de red",
+          "description": "Muestra las interfaces de red disponibles y su estado",
+          "command": "ip addr",
+          "example": "ip -br addr",
+          "tags": ["red", "interfaces", "ip", "direcciones"],
+          "notes": "-br = brief (compacto), -c = color"
+        },
+        {
+          "title": "Tabla de enrutamiento",
+          "description": "Muestra la tabla de rutas del sistema",
+          "command": "ip route",
+          "example": "ip route show default",
+          "tags": ["red", "rutas", "enrutamiento", "gateway"],
+          "notes": "Muestra la gateway por defecto y todas las rutas configuradas"
+        },
+        {
+          "title": "Prueba de conectividad",
+          "description": "Prueba si un host responde en la red",
+          "command": "ping -c 4 google.com",
+          "example": "ping -c 10 -s 1472 8.8.8.8",
+          "tags": ["red", "ping", "conectividad", "latencia"],
+          "notes": "-c = contar paquetes, -s = longitud, -i = intervalo"
+        },
+        {
+          "title": "Rastreo de ruta",
+          "description": "Muestra la ruta que siguen los paquetes hacia un destino",
+          "command": "traceroute google.com",
+          "example": "traceroute -n 8.8.8.8",
+          "tags": ["red", "traceroute", "rastreo", "ruta", "latencia"],
+          "notes": "-n = no resolver DNS (mas rapido), -w = timeout"
+        },
+        {
+          "title": "Prueba HTTP",
+          "description": "Prueba conexion HTTP/S a un servidor web",
+          "command": "curl -v http://localhost:8080",
+          "example": "curl -s -o /dev/null -w '%{http_code}' http://localhost",
+          "tags": ["red", "http", "curl", "prueba", "web"],
+          "notes": "-v = verbose, -s = silent, -I = solo headers"
+        },
+        {
+          "title": "Resolucion DNS",
+          "description": "Consulta la resolucion de nombres DNS",
+          "command": "nslookup google.com",
+          "example": "dig +short google.com",
+          "tags": ["red", "dns", "resolucion", "nombres"],
+          "notes": "dig y nslookup son intercambiables. dig es mas detallado"
+        },
+        {
+          "title": "Captura de paquetes",
+          "description": "Captura y analiza trafico de red en tiempo real",
+          "command": "tcpdump -i any port 80",
+          "example": "tcpdump -i eth0 -c 100 -nn",
+          "tags": ["red", "captura", "paquetes", "tcpdump", "trafico"],
+          "notes": "-i = interfaz, -c = contar paquetes, -nn = no resolver"
+        },
+        {
+          "title": "Estadisticas de red",
+          "description": "Muestra estadisticas de trafico por interfaz",
+          "command": "ip -s link",
+          "example": "ip -s -h link show eth0",
+          "tags": ["red", "estadisticas", "trafico", "interfaces"],
+          "notes": "-s = statistics, -h = human readable"
+        }
+      ]
+    },
+    {
+      "name": "procesos",
+      "description": "Administracion y monitoreo de procesos",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Procesos activos",
+          "description": "Lista todos los procesos en ejecucion",
+          "command": "ps aux",
+          "example": "ps aux --sort=-%cpu | head -10",
+          "tags": ["procesos", "activos", "ps", "lista"],
+          "notes": "a = todos, u = formato usuario, x = incluir sin TTY"
+        },
+        {
+          "title": "Arbol de procesos",
+          "description": "Muestra los procesos en forma de arbol jerarquico",
+          "command": "ps auxf",
+          "example": "ps auxf --sort=-%mem",
+          "tags": ["procesos", "arbol", "jerarquia", "ps"],
+          "notes": "La f activa el formato forest (arbol)"
+        },
+        {
+          "title": "Buscar procesos",
+          "description": "Busca procesos por nombre o patron",
+          "command": "pgrep -la nginx",
+          "example": "pgrep -u root -l sshd",
+          "tags": ["procesos", "buscar", "pgrep", "nombre"],
+          "notes": "-l = mostrar nombre, -u = filtrar por usuario, -a = argumentos"
+        },
+        {
+          "title": "Terminar por nombre",
+          "description": "Termina procesos por nombre en lugar de PID",
+          "command": "pkill -f nginx",
+          "example": "pkill -9 -f 'python script.py'",
+          "tags": ["procesos", "terminar", "pkill", "matar"],
+          "notes": "-f = matchear comando completo, -9 = SIGKILL"
+        },
+        {
+          "title": "Terminar por PID",
+          "description": "Termina un proceso usando su identificador",
+          "command": "kill -15 PID",
+          "example": "kill -9 1234",
+          "tags": ["procesos", "terminar", "kill", "pid"],
+          "notes": "-15 = SIGTERM (suave), -9 = SIGKILL (forzoso), -2 = SIGINT"
+        },
+        {
+          "title": "Cambiar prioridad",
+          "description": "Cambia la prioridad de un proceso en ejecucion",
+          "command": "renice -n 10 -p PID",
+          "example": "renice -n -5 -p 1234",
+          "tags": ["procesos", "prioridad", "renice", "nice"],
+          "notes": "Valores de -20 (max prioridad) a 19 (minima), requiere sudo para negativos"
+        },
+        {
+          "title": "Seguimiento de syscalls",
+          "description": "Monitorea las llamadas al sistema de un proceso",
+          "command": "strace -p PID",
+          "example": "strace -e openat,read -p 1234",
+          "tags": ["procesos", "strace", "syscalls", "depuracion"],
+          "notes": "-e = filtrar syscalls, -c = resumen estadistico, -o = archivo"
+        },
+        {
+          "title": "Archivos de un proceso",
+          "description": "Muestra los archivos abiertos por un proceso",
+          "command": "lsof -p PID",
+          "example": "lsof -p 1234 | wc -l",
+          "tags": ["procesos", "lsof", "archivos", "abiertos"],
+          "notes": "Util para detectar fugas de archivos abiertos"
+        },
+        {
+          "title": "Ejecutar con prioridad",
+          "description": "Ejecuta un comando con una prioridad especifica",
+          "command": "nice -n 10 comando",
+          "example": "nice -n 19 tar -czf backup.tar.gz /datos",
+          "tags": ["procesos", "nice", "prioridad", "ejecutar"],
+          "notes": "Valores mas altos = menor prioridad, por defecto es 0"
+        },
+        {
+          "title": "Tiempo en ejecucion",
+          "description": "Muestra cuanto tiempo llevan ejecutandose los procesos",
+          "command": "ps -eo pid,user,cmd,etime,time",
+          "example": "ps -eo pid,user,cmd,etime,time --sort=-etime | head -10",
+          "tags": ["procesos", "tiempo", "ejecucion", "ps"],
+          "notes": "etime = tiempo transcurrido, time = tiempo de CPU"
+        }
+      ]
+    },
+    {
+      "name": "hardware",
+      "description": "Componentes y dispositivos del sistema",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Informacion del CPU",
+          "description": "Muestra detalles del procesador del equipo",
+          "command": "lscpu",
+          "example": "lscpu | grep -E 'Model name|CPU(s)|Thread'",
+          "tags": ["hardware", "cpu", "procesador", "info"],
+          "notes": "Muestra arquitectura, nucleos, hilos, velocidad y mas"
+        },
+        {
+          "title": "Dispositivos PCI",
+          "description": "Lista todos los dispositivos conectados al bus PCI",
+          "command": "lspci",
+          "example": "lspci -vv | grep -i 'VGA\\|Network'",
+          "tags": ["hardware", "pci", "dispositivos", "lspci"],
+          "notes": "-v = verbose, -vv = muy verbose, -k = kernel drivers"
+        },
+        {
+          "title": "Dispositivos USB",
+          "description": "Muestra todos los dispositivos USB conectados",
+          "command": "lsusb",
+          "example": "lsusb -t",
+          "tags": ["hardware", "usb", "dispositivos", "lsusb"],
+          "notes": "-t = arbol, -v = detallado, -d = filtrar por vendor:product"
+        },
+        {
+          "title": "Listar hardware completo",
+          "description": "Muestra informacion detallada de todo el hardware",
+          "command": "lshw",
+          "example": "lshw -short | grep -E 'disk|memory|network'",
+          "tags": ["hardware", "lista", "completa", "lshw"],
+          "notes": "-short = resumen, -class = filtrar por tipo (disk, network, etc)"
+        },
+        {
+          "title": "BIOS y firmware",
+          "description": "Muestra informacion de la BIOS/firmware del sistema",
+          "command": "dmidecode -t bios",
+          "example": "dmidecode -t system",
+          "tags": ["hardware", "bios", "firmware", "dmidecode"],
+          "notes": "-t = tipo (bios, system, baseboard, processor, memory)"
+        },
+        {
+          "title": "Mensajes del kernel",
+          "description": "Muestra mensajes del kernel sobre deteccion de hardware",
+          "command": "dmesg",
+          "example": "dmesg | grep -E 'sd[a-z]|nvme'",
+          "tags": ["hardware", "kernel", "dmesg", "deteccion"],
+          "notes": "Los mensajes del kernel incluyen deteccion inicial de hardware"
+        },
+        {
+          "title": "Sensores de temperatura",
+          "description": "Muestra temperaturas del CPU y otros sensores",
+          "command": "sensors",
+          "example": "sensors -u | grep temp",
+          "tags": ["hardware", "temperatura", "sensores", "cpu"],
+          "notes": "Requiere lm-sensors configurado (sensors-detect)"
+        },
+        {
+          "title": "Informacion del disco",
+          "description": "Muestra parametros del disco duro",
+          "command": "hdparm -I /dev/sda",
+          "example": "hdparm -tT /dev/sda",
+          "tags": ["hardware", "disco", "hdparm", "parametros"],
+          "notes": "-I = info detallada, -t = test de lectura, -T = test de cache"
+        },
+        {
+          "title": "Info del CPU por proc",
+          "description": "Informacion del procesador desde archivos virtuales",
+          "command": "cat /proc/cpuinfo",
+          "example": "cat /proc/cpuinfo | grep 'model name' | uniq",
+          "tags": ["hardware", "cpu", "proc", "info"],
+          "notes": "Archivo virtual con informacion de cada nucleo del CPU"
+        },
+        {
+          "title": "Informacion del sistema",
+          "description": "Muestra informacion basica del kernel y arquitectura",
+          "command": "uname -a",
+          "example": "uname -mrs",
+          "tags": ["hardware", "sistema", "kernel", "uname", "arquitectura"],
+          "notes": "-a = todo, -m = arquitectura, -r = kernel release, -s = kernel name"
+        }
+      ]
+    },
+    {
+      "name": "kernel",
+      "description": "Modulos y parametros del kernel",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Modulos cargados",
+          "description": "Muestra todos los modulos del kernel actualmente cargados",
+          "command": "lsmod",
+          "example": "lsmod | grep -i nvidia",
+          "tags": ["kernel", "modulos", "cargados", "lsmod"],
+          "notes": "Muestra modulo, ocupacion, y modulos que dependen de el"
+        },
+        {
+          "title": "Cargar modulo",
+          "description": "Carga un modulo del kernel en el sistema",
+          "command": "modprobe nombre_modulo",
+          "example": "modprobe nvidia",
+          "tags": ["kernel", "modulos", "cargar", "modprobe"],
+          "notes": "Resuelve dependencias automaticamente. Requiere sudo"
+        },
+        {
+          "title": "Informacion de modulo",
+          "description": "Muestra informacion detallada de un modulo del kernel",
+          "command": "modinfo nombre_modulo",
+          "example": "modinfo nvidia",
+          "tags": ["kernel", "modulos", "info", "modinfo"],
+          "notes": "Muestra autor, descripcion, dependencias, parametros y firmware"
+        },
+        {
+          "title": "Remover modulo",
+          "description": "Descarga un modulo del kernel del sistema",
+          "command": "modprobe -r nombre_modulo",
+          "example": "modprobe -r nvidia",
+          "tags": ["kernel", "modulos", "remover", "modprobe"],
+          "notes": "-r = remove. Cuidado con modulos en uso. Requiere sudo"
+        },
+        {
+          "title": "Parametros del kernel",
+          "description": "Muestra y modifica parametros del kernel en tiempo real",
+          "command": "sysctl -a",
+          "example": "sysctl net.ipv4.ip_forward",
+          "tags": ["kernel", "parametros", "sysctl", "config"],
+          "notes": "-a = todos, -w = modificar valor, cambios en /etc/sysctl.conf"
+        },
+        {
+          "title": "Version del kernel",
+          "description": "Muestra la version del kernel en uso",
+          "command": "uname -r",
+          "example": "uname -a",
+          "tags": ["kernel", "version", "uname"],
+          "notes": "Complementar con 'cat /etc/os-release' para informacion del SO"
+        },
+        {
+          "title": "Log del kernel",
+          "description": "Muestra los mensajes mas recientes del kernel",
+          "command": "dmesg -T",
+          "example": "dmesg -T | tail -50",
+          "tags": ["kernel", "log", "dmesg", "mensajes"],
+          "notes": "-T = timestamps legibles, -H = human readable, -w = seguir"
+        },
+        {
+          "title": "Dependencias de modulos",
+          "description": "Reconstruye las dependencias de los modulos del kernel",
+          "command": "depmod -a",
+          "example": "depmod -a",
+          "tags": ["kernel", "modulos", "dependencias", "depmod"],
+          "notes": "Se ejecuta despues de instalar nuevos modulos. Requiere sudo"
+        }
+      ]
+    },
+    {
+      "name": "archivos",
+      "description": "Sistemas de archivos y operaciones de disco",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Montar sistema de archivos",
+          "description": "Monta un sistema de archivos en un directorio",
+          "command": "mount /dev/sda1 /mnt",
+          "example": "mount -t ext4 /dev/sda1 /mnt",
+          "tags": ["archivos", "mount", "montar", "filesystem"],
+          "notes": "-t = tipo de FS, -o = opciones (ro, rw, noexec, etc)"
+        },
+        {
+          "title": "Desmontar sistema de archivos",
+          "description": "Desmonta un sistema de archivos de forma segura",
+          "command": "umount /mnt",
+          "example": "umount -l /mnt",
+          "tags": ["archivos", "umount", "desmontar", "filesystem"],
+          "notes": "-l = lazy (cuando deje de usarse), -f = forzoso"
+        },
+        {
+          "title": "Revisar filesystem",
+          "description": "Verifica y repara la integridad del sistema de archivos",
+          "command": "fsck /dev/sda1",
+          "example": "fsck -yf /dev/sda1",
+          "tags": ["archivos", "fsck", "revisar", "reparar", "integrdidad"],
+          "notes": "Requiere que la particion no este montada. -y = si a todo, -f = forzar"
+        },
+        {
+          "title": "Crear sistema de archivos",
+          "description": "Formatea una particion con sistema de archivos ext4",
+          "command": "mkfs.ext4 /dev/sda1",
+          "example": "mkfs.ext4 -L mi_etiqueta /dev/sda1",
+          "tags": ["archivos", "mkfs", "formatear", "ext4", "crear"],
+          "notes": "BORRA TODOS LOS DATOS. -L = etiqueta, -b = bloques por grupo"
+        },
+        {
+          "title": "Parametros de ext4",
+          "description": "Ajusta parametros de un sistema de archivos ext4",
+          "command": "tune2fs -l /dev/sda1",
+          "example": "tune2fs -c 30 /dev/sda1",
+          "tags": ["archivos", "tune2fs", "parametros", "ext4"],
+          "notes": "-l = listar, -c = max montajes antes de fsck, -i = intervalo"
+        },
+        {
+          "title": "Identificar dispositivos",
+          "description": "Muestra UUID y tipo de FS de los dispositivos",
+          "command": "blkid",
+          "example": "blkid -o list",
+          "tags": ["archivos", "blkid", "uuid", "dispositivos"],
+          "notes": "-o list = formato lista, util para configurar fstab"
+        },
+        {
+          "title": "Dispositivos con FS",
+          "description": "Muestra los sistemas de archivos en cada dispositivo",
+          "command": "lsblk -f",
+          "example": "lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,UUID",
+          "tags": ["archivos", "lsblk", "filesystem", "dispositivos"],
+          "notes": "-f = filesystem info, -o = columnas personalizadas"
+        },
+        {
+          "title": "Info detallada de archivo",
+          "description": "Muestra informacion detallada de un archivo o directorio",
+          "command": "stat archivo",
+          "example": "stat -c '%a %n' *",
+          "tags": ["archivos", "stat", "info", "permisos", "metadatos"],
+          "notes": "Muestra permisos, bloques, inodo, timestamps del archivo"
+        },
+        {
+          "title": "Inodos del sistema",
+          "description": "Muestra el uso de inodos en las particiones montadas",
+          "command": "df -i",
+          "example": "df -i /var",
+          "tags": ["archivos", "inodos", "df", "uso"],
+          "notes": "Un sistema sin inodos disponibles no puede crear archivos nuevos"
+        },
+        {
+          "title": "Arbol de montaje",
+          "description": "Muestra los puntos de montaje en forma de arbol",
+          "command": "findmnt",
+          "example": "findmnt -t ext4",
+          "tags": ["archivos", "montaje", "arbol", "findmnt"],
+          "notes": "-t = filtrar por tipo, -D = df-like, -S = buscar por fuente"
+        }
+      ]
+    },
+    {
+      "name": "bitacoras",
+      "description": "Visualizacion y analisis de logs del sistema",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Logs del sistema",
+          "description": "Muestra los registros del sistema con journald",
+          "command": "journalctl",
+          "example": "journalctl -xe",
+          "tags": ["bitacoras", "logs", "sistema", "journalctl"],
+          "notes": "-xe = ultimas entradas con explicacion, -f = seguir, -r = reversa"
+        },
+        {
+          "title": "Logs de un servicio",
+          "description": "Muestra los logs especificos de un servicio",
+          "command": "journalctl -u nombre_servicio",
+          "example": "journalctl -u nginx.service --since today",
+          "tags": ["bitacoras", "logs", "servicio", "journalctl"],
+          "notes": "--since = desde, --until = hasta, -p = prioridad (err, warning)"
+        },
+        {
+          "title": "Seguir logs en vivo",
+          "description": "Sigue la salida de un archivo de log en tiempo real",
+          "command": "tail -f /var/log/syslog",
+          "example": "tail -f /var/log/nginx/access.log | grep 500",
+          "tags": ["bitacoras", "logs", "tail", "seguir", "tiempo real"],
+          "notes": "-f = follow, -n = lineas iniciales, --pid = seguir hasta que muera PID"
+        },
+        {
+          "title": "Navegar logs grandes",
+          "description": "Navega archivos de log grandes de forma interactiva",
+          "command": "less /var/log/syslog",
+          "example": "less +G /var/log/syslog",
+          "tags": ["bitacoras", "logs", "less", "navegar"],
+          "notes": "+G = ir al final, /patron = buscar, n = siguiente, g = inicio"
+        },
+        {
+          "title": "Buscar en logs",
+          "description": "Busca patrones especificos en archivos de log",
+          "command": "grep 'error' /var/log/syslog",
+          "example": "grep -i 'failed\\|error' /var/log/*.log",
+          "tags": ["bitacoras", "logs", "grep", "buscar", "patrones"],
+          "notes": "-i = mayus/minus, -r = recursivo, -c = contar, -A/-B = contexto"
+        },
+        {
+          "title": "Logs del kernel",
+          "description": "Muestra mensajes del kernel y controladores",
+          "command": "dmesg -T",
+          "example": "dmesg -T | grep -i error",
+          "tags": ["bitacoras", "kernel", "dmesg", "logs"],
+          "notes": "-T = timestamps en formato legible, -w = esperar nuevos mensajes"
+        },
+        {
+          "title": "Intentos de acceso",
+          "description": "Muestra el historial de inicios de sesion en el sistema",
+          "command": "last",
+          "example": "last -10",
+          "tags": ["bitacoras", "accesos", "login", "last", "sesiones"],
+          "notes": "-n = numero de entradas, -i = mostrar IP, -x = shutdowns"
+        },
+        {
+          "title": "Logs de auditoria",
+          "description": "Consulta los registros de auditoria del sistema",
+          "command": "ausearch -m avc",
+          "example": "ausearch -ts today -m USER_LOGIN",
+          "tags": ["bitacoras", "auditoria", "ausearch", "audit"],
+          "notes": "-m = mensaje, -ts = timestamp, -ui = user ID, requiere auditd"
+        }
+      ]
+    },
+    {
+      "name": "servicios",
+      "description": "Administracion de servicios con systemd",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Estado de servicios",
+          "description": "Muestra el estado actual de un servicio",
+          "command": "systemctl status nombre_servicio",
+          "example": "systemctl status sshd",
+          "tags": ["servicios", "systemctl", "estado", "systemd"],
+          "notes": "Muestra si esta activo, habilitado, PID, uso de memoria y ultimos logs"
+        },
+        {
+          "title": "Iniciar servicio",
+          "description": "Inicia un servicio del sistema",
+          "command": "systemctl start nombre_servicio",
+          "example": "systemctl start nginx",
+          "tags": ["servicios", "systemctl", "iniciar", "start"],
+          "notes": "Requiere sudo. No persiste entre reinicios (usar enable)"
+        },
+        {
+          "title": "Detener servicio",
+          "description": "Detiene un servicio del sistema",
+          "command": "systemctl stop nombre_servicio",
+          "example": "systemctl stop nginx",
+          "tags": ["servicios", "systemctl", "detener", "stop"],
+          "notes": "Requiere sudo. Detiene el proceso de forma controlada"
+        },
+        {
+          "title": "Reiniciar servicio",
+          "description": "Reinicia un servicio del sistema",
+          "command": "systemctl restart nombre_servicio",
+          "example": "systemctl restart networking",
+          "tags": ["servicios", "systemctl", "reiniciar", "restart"],
+          "notes": "Ejecuta stop y luego start. reload es menos invasivo si el servicio lo soporta"
+        },
+        {
+          "title": "Habilitar servicio",
+          "description": "Configura un servicio para que inicie automaticamente",
+          "command": "systemctl enable nombre_servicio",
+          "example": "systemctl enable --now nginx",
+          "tags": ["servicios", "systemctl", "habilitar", "enable", "auto-inicio"],
+          "notes": "--now = habilita e inicia inmediatamente"
+        },
+        {
+          "title": "Deshabilitar servicio",
+          "description": "Evita que un servicio inicie automaticamente",
+          "command": "systemctl disable nombre_servicio",
+          "example": "systemctl disable --now apache2",
+          "tags": ["servicios", "systemctl", "deshabilitar", "disable"],
+          "notes": "--now = deshabilita y detiene inmediatamente"
+        },
+        {
+          "title": "Unidades activas",
+          "description": "Lista todas las unidades de systemd activas",
+          "command": "systemctl list-units",
+          "example": "systemctl list-units --type=service --state=running",
+          "tags": ["servicios", "systemctl", "unidades", "activas", "lista"],
+          "notes": "--type = filtrar por tipo, --state = por estado, --all = incluir inactivas"
+        },
+        {
+          "title": "Unidades disponibles",
+          "description": "Lista todos los archivos de unidad instalados",
+          "command": "systemctl list-unit-files",
+          "example": "systemctl list-unit-files --type=service | grep enabled",
+          "tags": ["servicios", "systemctl", "unidades", "disponibles"],
+          "notes": "Muestra el estado de habilitacion de cada unidad (enabled/disabled/static)"
+        },
+        {
+          "title": "Recargar systemd",
+          "description": "Recarga la configuracion de systemd tras cambios",
+          "command": "systemctl daemon-reload",
+          "example": "systemctl daemon-reload",
+          "tags": ["servicios", "systemctl", "recargar", "reload", "daemon"],
+          "notes": "Ejecutar despues de crear o modificar archivos .service en /etc/systemd/system/"
+        },
+        {
+          "title": "Dependencias de servicio",
+          "description": "Muestra las dependencias de una unidad de systemd",
+          "command": "systemctl list-dependencies nombre_servicio",
+          "example": "systemctl list-dependencies nginx",
+          "tags": ["servicios", "systemctl", "dependencias", "arbol"],
+          "notes": "Muestra que servicios necesita y cuales dependen de el"
+        }
+      ]
+    },
+    {
+      "name": "rendimiento",
+      "description": "Analisis y monitoreo del rendimiento del sistema",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Monitor de procesos",
+          "description": "Muestra procesos en tiempo real ordenados por uso de CPU",
+          "command": "top",
+          "example": "top -o %MEM -U usuario",
+          "tags": ["rendimiento", "top", "procesos", "cpu", "monitoreo"],
+          "notes": "-o = ordenar por columna, -u = filtrar usuario, -b = batch mode"
+        },
+        {
+          "title": "Estadisticas de E/S",
+          "description": "Muestra estadisticas detalladas de entrada/salida por disco",
+          "command": "iostat -x 2",
+          "example": "iostat -x 2 5",
+          "tags": ["rendimiento", "iostat", "disco", "io", "estadisticas"],
+          "notes": "-x = extendido, primer numero = intervalo (seg), segundo = repeticiones"
+        },
+        {
+          "title": "Estadisticas del sistema",
+          "description": "Muestra procesos, memoria, paginacion y CPU",
+          "command": "vmstat 2",
+          "example": "vmstat -w 2 10",
+          "tags": ["rendimiento", "vmstat", "sistema", "estadisticas"],
+          "notes": "-w = wide output, -s = resumen, -d = disco"
+        },
+        {
+          "title": "Uso de CPU historico",
+          "description": "Muestra estadisticas historicas de uso de CPU",
+          "command": "sar -u",
+          "example": "sar -u 1 5",
+          "tags": ["rendimiento", "sar", "cpu", "historico"],
+          "notes": "Requiere sysstat instalado. -r = memoria, -b = IO, -n = red"
+        },
+        {
+          "title": "Uso de memoria historico",
+          "description": "Muestra estadisticas historicas de uso de memoria",
+          "command": "sar -r",
+          "example": "sar -r -S",
+          "tags": ["rendimiento", "sar", "memoria", "historico"],
+          "notes": "-r = memoria, -S = swap, -q = load average"
+        },
+        {
+          "title": "Perfilado del sistema",
+          "description": "Analiza el rendimiento del sistema en tiempo real",
+          "command": "perf top",
+          "example": "perf stat -p PID",
+          "tags": ["rendimiento", "perf", "perfilado", "analisis"],
+          "notes": "Requiere linux-tools. top = tiempo real, stat = estadisticas, record = grabacion"
+        },
+        {
+          "title": "CPU por nucleo",
+          "description": "Muestra estadisticas de uso por cada nucleo del CPU",
+          "command": "mpstat -P ALL 1",
+          "example": "mpstat -P ALL 1 5",
+          "tags": ["rendimiento", "mpstat", "cpu", "nucleos"],
+          "notes": "-P ALL = todos los nucleos, primer numero = intervalo"
+        },
+        {
+          "title": "Estadisticas por proceso",
+          "description": "Muestra estadisticas de CPU y memoria por proceso",
+          "command": "pidstat 2",
+          "example": "pidstat -p PID -r 2",
+          "tags": ["rendimiento", "pidstat", "procesos", "cpu", "memoria"],
+          "notes": "-p = filtrar PID, -r = mem, -d = IO, -t = hilos"
+        },
+        {
+          "title": "Resumen de syscalls",
+          "description": "Muestra resumen de llamadas al sistema de un proceso",
+          "command": "strace -c -p PID",
+          "example": "strace -c -p 1234",
+          "tags": ["rendimiento", "strace", "syscalls", "resumen"],
+          "notes": "-c = resumen estadistico, espera Ctrl+C o timeout"
+        },
+        {
+          "title": "Tiempo de ejecucion",
+          "description": "Mide el tiempo que tarda en ejecutarse un comando",
+          "command": "time comando",
+          "example": "time ls -R /usr",
+          "tags": ["rendimiento", "time", "medicion", "ejecucion"],
+          "notes": "Muestra tiempo real, de CPU de usuario y de sistema"
+        }
+      ]
+    },
+    {
+      "name": "seguridad",
+      "description": "Politicas, firewall y auditoria de seguridad",
+      "icon": "",
+      "commands": [
+        {
+          "title": "Reglas de firewall",
+          "description": "Muestra las reglas de iptables configuradas",
+          "command": "iptables -L -n -v",
+          "example": "iptables -L INPUT -n -v --line-numbers",
+          "tags": ["seguridad", "iptables", "firewall", "reglas"],
+          "notes": "-L = listar, -n = numerico, -v = verbose, --line-numbers = numerar reglas"
+        },
+        {
+          "title": "Estado de UFW",
+          "description": "Muestra el estado y reglas del firewall UFW",
+          "command": "ufw status verbose",
+          "example": "ufw status numbered",
+          "tags": ["seguridad", "ufw", "firewall", "estado"],
+          "notes": "UFW es un frontend para iptables. numbered = reglas numeradas"
+        },
+        {
+          "title": "Estado de fail2ban",
+          "description": "Muestra el estado de fail2ban y sus jaulas activas",
+          "command": "fail2ban-client status",
+          "example": "fail2ban-client status sshd",
+          "tags": ["seguridad", "fail2ban", "estado", "jaulas"],
+          "notes": "fail2ban bloquea IPs con multiples intentos fallidos de login"
+        },
+        {
+          "title": "Estado de SELinux",
+          "description": "Muestra el modo actual de SELinux",
+          "command": "getenforce",
+          "example": "setenforce 0",
+          "tags": ["seguridad", "selinux", "estado", "politicas"],
+          "notes": "Modos: Enforcing, Permissive, Disabled. setenforce 0 = permissive (temporal)"
+        },
+        {
+          "title": "Estado de AppArmor",
+          "description": "Muestra los perfiles de AppArmor cargados",
+          "command": "aa-status",
+          "example": "aa-complain /ruta/al/perfil",
+          "tags": ["seguridad", "apparmor", "perfiles", "estado"],
+          "notes": "AppArmor restringe capacidades de programas por perfil"
+        },
+        {
+          "title": "Intentos de acceso fallidos",
+          "description": "Muestra los intentos fallidos de inicio de sesion",
+          "command": "lastb",
+          "example": "lastb -10",
+          "tags": ["seguridad", "accesos", "fallidos", "login", "lastb"],
+          "notes": "Requiere que /var/log/btmp exista. Muestra IP y usuario del intento"
+        },
+        {
+          "title": "Usuarios conectados",
+          "description": "Muestra los usuarios actualmente conectados al sistema",
+          "command": "who",
+          "example": "who -u",
+          "tags": ["seguridad", "usuarios", "conectados", "sesiones"],
+          "notes": "-u = muestra inactividad y PID, -a = toda la informacion"
+        },
+        {
+          "title": "Privilegios sudo",
+          "description": "Muestra los comandos que un usuario puede ejecutar con sudo",
+          "command": "sudo -l",
+          "example": "sudo -l -U otro_usuario",
+          "tags": ["seguridad", "sudo", "privilegios", "permisos"],
+          "notes": "Lista los comandos permitidos en /etc/sudoers para el usuario"
+        },
+        {
+          "title": "Deteccion de rootkits",
+          "description": "Busca rootkits y software malicioso en el sistema",
+          "command": "chkrootkit",
+          "example": "chkrootkit -q",
+          "tags": ["seguridad", "rootkits", "deteccion", "chkrootkit"],
+          "notes": "-q = quiet (solo muestra resultados positivos). Requiere instalacion"
+        },
+        {
+          "title": "Analisis de rootkits",
+          "description": "Analiza el sistema en busca de rootkits y malware",
+          "command": "rkhunter --check",
+          "example": "rkhunter --check --skip-keypress",
+          "tags": ["seguridad", "rootkits", "rkhunter", "analisis", "malware"],
+          "notes": "--skip-keypress = sin pausas. Primero usar --update para actualizar BD"
+        },
+        {
+          "title": "Configuracion SSH",
+          "description": "Prueba la configuracion del servidor SSH",
+          "command": "sshd -T",
+          "example": "sshd -T | grep -i 'permitrootlogin\\|port'",
+          "tags": ["seguridad", "ssh", "configuracion", "sshd"],
+          "notes": "Verifica la configuracion sin reiniciar el servicio"
+        },
+        {
+          "title": "Reglas de auditoria",
+          "description": "Muestra las reglas de auditoria del sistema configuradas",
+          "command": "auditctl -l",
+          "example": "auditctl -a exit,always -S unlink -S rmdir",
+          "tags": ["seguridad", "auditoria", "auditctl", "reglas"],
+          "notes": "Requiere auditd corriendo. Las reglas se configuran en /etc/audit/rules.d/"
+        }
+      ]
+    },
+    {
+      "name": "contenedores",
+      "description": "Gestion de contenedores Docker y Podman",
+      "commands": [
+        {
+          "title": "Contenedores activos",
+          "description": "Lista los contenedores en ejecucion",
+          "command": "docker ps",
+          "example": "docker ps -a",
+          "tags": ["contenedores", "docker", "activos", "lista"],
+          "notes": "-a = todos, -q = solo IDs, --format = formato personalizado"
+        },
+        {
+          "title": "Imagenes descargadas",
+          "description": "Muestra las imagenes de Docker disponibles localmente",
+          "command": "docker images",
+          "example": "docker images --format 'table {{.Repository}}:{{.Tag}}'",
+          "tags": ["contenedores", "imagenes", "docker", "lista"],
+          "notes": "--filter dangling=true = imagenes huerfanas, -q = solo IDs"
+        },
+        {
+          "title": "Ejecutar comando en contenedor",
+          "description": "Ejecuta un comando dentro de un contenedor activo",
+          "command": "docker exec -it <contenedor> bash",
+          "example": "docker exec -it nginx sh",
+          "tags": ["contenedores", "docker", "ejecutar", "shell"],
+          "notes": "-it = interactivo + TTY, -d = detached, -e = variables de entorno"
+        },
+        {
+          "title": "Logs de contenedor",
+          "description": "Muestra los registros de un contenedor",
+          "command": "docker logs -f <contenedor>",
+          "example": "docker logs --tail 50 nginx",
+          "tags": ["contenedores", "docker", "logs", "bitacora"],
+          "notes": "-f = seguir, --tail = ultimas N lineas, --since = desde fecha"
+        },
+        {
+          "title": "Limpiar recursos",
+          "description": "Elimina contenedores, imagenes y volumenes no usados",
+          "command": "docker system prune -a",
+          "example": "docker system prune --volumes",
+          "tags": ["contenedores", "docker", "limpiar", "espacio"],
+          "notes": "-a = todo, --volumes = incluye volumenes, -f = forzar sin confirmar"
+        },
+        {
+          "title": "Compose: levantar servicios",
+          "description": "Inicia todos los servicios definidos en docker-compose.yml",
+          "command": "docker compose up -d",
+          "example": "docker compose -f docker-compose.prod.yml up -d",
+          "tags": ["contenedores", "docker", "compose", "servicios"],
+          "notes": "-d = detached, --build = reconstruir imagenes, -f = archivo custom"
+        },
+        {
+          "title": "Compose: estado",
+          "description": "Muestra el estado de los servicios de compose",
+          "command": "docker compose ps",
+          "example": "docker compose logs -f",
+          "tags": ["contenedores", "docker", "compose", "estado"],
+          "notes": "ps = lista procesos, logs = ver registros, top = procesos internos"
+        },
+        {
+          "title": "Inspeccionar contenedor",
+          "description": "Muestra configuracion detallada de un contenedor en JSON",
+          "command": "docker inspect <contenedor>",
+          "example": "docker inspect nginx | jq '.[0].NetworkSettings.IPAddress'",
+          "tags": ["contenedores", "docker", "inspeccionar", "detalle"],
+          "notes": "Devuelve JSON completo con config, red, montajes y estado"
+        },
+        {
+          "title": "Uso de disco por Docker",
+          "description": "Muestra el espacio usado por cada componente de Docker",
+          "command": "docker system df",
+          "example": "docker system df -v",
+          "tags": ["contenedores", "docker", "disco", "espacio"],
+          "notes": "-v = vista detallada por capa/imagen/contenedor"
+        },
+        {
+          "title": "Podman: alternativa a Docker",
+          "description": "Podman usa los mismos comandos que Docker sin daemon",
+          "command": "podman ps -a",
+          "example": "podman run -d --name web nginx",
+          "tags": ["contenedores", "podman", "docker", "alternativa"],
+          "notes": "Podman es compatible con Docker CLI pero no requiere daemon"
+        }
+      ]
+    },
+    {
+      "name": "paquetes",
+      "description": "Gestion de paquetes y actualizaciones del sistema",
+      "commands": [
+        {
+          "title": "Actualizar lista de paquetes",
+          "description": "Actualiza la lista de paquetes disponibles en los repositorios",
+          "command": "apt update",
+          "example": "sudo apt update",
+          "tags": ["paquetes", "apt", "actualizar", "repositorios"],
+          "notes": "Debe ejecutarse antes de upgrade. Requiere sudo en la mayoria de los casos"
+        },
+        {
+          "title": "Actualizar paquetes",
+          "description": "Actualiza todos los paquetes instalados a su version mas reciente",
+          "command": "apt upgrade -y",
+          "example": "apt full-upgrade -y",
+          "tags": ["paquetes", "apt", "actualizar", "upgrade"],
+          "notes": "-y = si a todo, full-upgrade = maneja cambios de dependencias"
+        },
+        {
+          "title": "Instalar paquete",
+          "description": "Instala un paquete desde los repositorios",
+          "command": "apt install <paquete>",
+          "example": "apt install nginx",
+          "tags": ["paquetes", "apt", "instalar", "instalacion"],
+          "notes": "--no-install-recommends = evitar paquetes sugeridos, -y = automático"
+        },
+        {
+          "title": "Buscar paquete",
+          "description": "Busca paquetes en los repositorios por nombre o descripcion",
+          "command": "apt search <termino>",
+          "example": "apt search web server",
+          "tags": ["paquetes", "apt", "buscar", "busqueda"],
+          "notes": "--names-only = buscar solo por nombre, -f = busqueda completa"
+        },
+        {
+          "title": "Info de paquete",
+          "description": "Muestra informacion detallada de un paquete instalado",
+          "command": "apt show <paquete>",
+          "example": "apt show nginx",
+          "tags": ["paquetes", "apt", "info", "detalle"],
+          "notes": "Muestra version, descripcion, dependencias, tamanio y repositorio"
+        },
+        {
+          "title": "Paquetes instalados",
+          "description": "Lista todos los paquetes instalados en el sistema",
+          "command": "dpkg -l",
+          "example": "dpkg -l | grep -i nginx",
+          "tags": ["paquetes", "dpkg", "instalados", "lista"],
+          "notes": "dpkg -L <paq> = archivos del paquete, dpkg -S <archivo> = dueno del archivo"
+        },
+        {
+          "title": "Homebrew: instalar paquete",
+          "description": "Instala un paquete con Homebrew en macOS",
+          "command": "brew install <paquete>",
+          "example": "brew install wget",
+          "tags": ["paquetes", "brew", "homebrew", "macos", "instalar"],
+          "notes": "--cask = apps GUI, --formula = CLI, brew search = buscar"
+        },
+        {
+          "title": "Homebrew: actualizar todo",
+          "description": "Actualiza Homebrew y todos los paquetes instalados",
+          "command": "brew update && brew upgrade",
+          "example": "brew upgrade --cask --greedy",
+          "tags": ["paquetes", "brew", "homebrew", "actualizar"],
+          "notes": "--greedy = actualiza apps con auto-update, --cask = solo apps GUI"
+        },
+        {
+          "title": "RPM: verificar paquete",
+          "description": "Verifica la integridad de un paquete RPM instalado",
+          "command": "rpm -V <paquete>",
+          "example": "rpm -qa | grep -i kernel",
+          "tags": ["paquetes", "rpm", "redhat", "verificar"],
+          "notes": "-V = verify, -qa = query all, -qi = info, -ql = archivos"
+        },
+        {
+          "title": "Limpiar cache de paquetes",
+          "description": "Elimina paquetes descargados en cache para liberar espacio",
+          "command": "apt autoclean && apt autoremove",
+          "example": "apt autoremove --purge",
+          "tags": ["paquetes", "apt", "limpiar", "cache", "espacio"],
+          "notes": "autoclean = solo paquetes obsoletos, autoremove = dependencias huerfanas"
+        }
+      ]
+    },
+    {
+      "name": "respaldo",
+      "description": "Herramientas de respaldo, copias y recuperacion",
+      "commands": [
+        {
+          "title": "Respaldo con rsync",
+          "description": "Sincroniza directorios de forma eficiente entre rutas locales o remotas",
+          "command": "rsync -avz origen/ destino/",
+          "example": "rsync -avz --delete /datos/ usuario@servidor:/backup/",
+          "tags": ["respaldo", "rsync", "sync", "copia"],
+          "notes": "-a = archivo (recursivo + permisos), -v = verbose, -z = comprimir"
+        },
+        {
+          "title": "Respaldo incremental con rsync",
+          "description": "Respaldo incremental usando enlaces duros para historial",
+          "command": "rsync -av --link-dest=../anterior origen/ destino/",
+          "example": "rsync -av --link-dest=../backup_lunes /datos/ backup_martes/",
+          "tags": ["respaldo", "rsync", "incremental", "backup"],
+          "notes": "--link-dest usa enlaces duros a archivos sin cambios para ahorrar espacio"
+        },
+        {
+          "title": "Comprimir con tar",
+          "description": "Crea un archivo comprimido de un directorio",
+          "command": "tar -czf respaldo.tar.gz /ruta/",
+          "example": "tar -czf etc_$(date +%F).tar.gz /etc/",
+          "tags": ["respaldo", "tar", "comprimir", "archivo"],
+          "notes": "-c = crear, -z = gzip, -f = archivo, -j = bzip2, --exclude = omitir"
+        },
+        {
+          "title": "Extraer archivo tar",
+          "description": "Extrae un archivo comprimido en el directorio actual",
+          "command": "tar -xzf respaldo.tar.gz",
+          "example": "tar -xzf respaldo.tar.gz -C /restauracion/",
+          "tags": ["respaldo", "tar", "extraer", "restaurar"],
+          "notes": "-x = extraer, -C = directorio destino, -t = listar contenido"
+        },
+        {
+          "title": "Respaldo de base de datos MySQL",
+          "description": "Exporta una base de datos MySQL a un archivo SQL",
+          "command": "mysqldump -u usuario -p basedatos > respaldo.sql",
+          "example": "mysqldump --all-databases > todo_$(date +%F).sql",
+          "tags": ["respaldo", "mysql", "base-datos", "exportar"],
+          "notes": "--all-databases = todo, --single-transaction = sin bloqueo en InnoDB"
+        },
+        {
+          "title": "Respaldo de base de datos Postgres",
+          "description": "Exporta una base de datos PostgreSQL a un archivo SQL",
+          "command": "pg_dump -U usuario basedatos > respaldo.sql",
+          "example": "pg_dumpall > todo_$(date +%F).sql",
+          "tags": ["respaldo", "postgres", "base-datos", "exportar"],
+          "notes": "pg_dumpall = todas las bases, -Fc = formato comprimido, -j = paralelo"
+        },
+        {
+          "title": "Restaurar base MySQL",
+          "description": "Restaura una base de datos desde un archivo SQL",
+          "command": "mysql -u usuario -p basedatos < respaldo.sql",
+          "example": "mysql -u root -p < todo.sql",
+          "tags": ["respaldo", "mysql", "restaurar", "importar"],
+          "notes": "Crear la BD antes con CREATE DATABASE si no existe"
+        },
+        {
+          "title": "Restaurar base Postgres",
+          "description": "Restaura una base de datos desde un archivo SQL",
+          "command": "psql -U usuario basedatos < respaldo.sql",
+          "example": "psql -U postgres -d basedatos < respaldo.sql",
+          "tags": ["respaldo", "postgres", "restaurar", "importar"],
+          "notes": "Usar -f archivo.sql o redireccion con <"
+        },
+        {
+          "title": "Copia con dd",
+          "description": "Clona un disco o particion a nivel de bloques",
+          "command": "dd if=/dev/sda of=/dev/sdb bs=4M status=progress",
+          "example": "dd if=/dev/zero of=/dev/sda bs=4M status=progress",
+          "tags": ["respaldo", "dd", "clonar", "disco", "bloques"],
+          "notes": "CUIDADO: dd escribe directo al destino. bs = tamano de bloque, status=progress = barra"
+        },
+        {
+          "title": "Verificar integridad",
+          "description": "Verifica que los archivos respaldados esten intactos con md5sum",
+          "command": "md5sum -c checksums.md5",
+          "example": "find /datos -type f -exec md5sum {} \\; > checksums.md5",
+          "tags": ["respaldo", "integritad", "checksum", "verificar"],
+          "notes": "Generar lista de checksums al respaldar y verificar al restaurar"
+        }
+      ]
+    },
+    {
+      "name": "certificados",
+      "description": "Gestion de certificados SSL/TLS y claves",
+      "commands": [
+        {
+          "title": "Generar clave privada",
+          "description": "Genera una clave privada RSA para un certificado",
+          "command": "openssl genrsa -out clave.pem 2048",
+          "example": "openssl genrsa -aes256 -out clave.pem 4096",
+          "tags": ["certificados", "openssl", "clave", "rsa"],
+          "notes": "2048 = bits, -aes256 = protege con contrasena, 4096 = mas seguro"
+        },
+        {
+          "title": "Generar CSR",
+          "description": "Genera una solicitud de firma de certificado",
+          "command": "openssl req -new -key clave.pem -out solicitud.csr",
+          "example": "openssl req -new -key clave.pem -out solicitud.csr -subj '/CN=midominio.com'",
+          "tags": ["certificados", "openssl", "csr", "solicitud"],
+          "notes": "-subj = datos directamente sin prompts, -config = archivo de config"
+        },
+        {
+          "title": "Auto-firmar certificado",
+          "description": "Genera un certificado autofirmado valido por 365 dias",
+          "command": "openssl req -x509 -nodes -days 365 -key clave.pem -out cert.pem",
+          "example": "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365",
+          "tags": ["certificados", "openssl", "autofirmado", "ssl"],
+          "notes": "-x509 = certificado en lugar de CSR, -nodes = sin contrasena en clave"
+        },
+        {
+          "title": "Verificar certificado",
+          "description": "Muestra el contenido y validez de un certificado",
+          "command": "openssl x509 -in cert.pem -text -noout",
+          "example": "openssl x509 -in cert.pem -dates -subject -issuer -noout",
+          "tags": ["certificados", "openssl", "verificar", "x509"],
+          "notes": "-dates = fechas, -subject = dueno, -issuer = quien lo firmo, -noout = sin base64"
+        },
+        {
+          "title": "Verificar conexion SSL",
+          "description": "Verifica la cadena de certificados de un servidor remoto",
+          "command": "openssl s_client -connect host:443 -showcerts",
+          "example": "openssl s_client -connect google.com:443 -servername google.com",
+          "tags": ["certificados", "openssl", "ssl", "conexion", "verificar"],
+          "notes": "-showcerts = muestra toda la cadena, -servername = SNI para virtual hosts"
+        },
+        {
+          "title": "Certificado Let's Encrypt",
+          "description": "Solicita un certificado SSL gratuito con Certbot",
+          "command": "certbot --nginx -d midominio.com",
+          "example": "certbot certonly --webroot -w /var/www/html -d midominio.com",
+          "tags": ["certificados", "certbot", "letsencrypt", "ssl"],
+          "notes": "--nginx = config automatica nginx, certonly = solo obtener sin configurar"
+        },
+        {
+          "title": "Renovar certificados",
+          "description": "Renueva todos los certificados de Let's Encrypt",
+          "command": "certbot renew",
+          "example": "certbot renew --dry-run",
+          "tags": ["certificados", "certbot", "renovar", "letsencrypt"],
+          "notes": "--dry-run = prueba sin renovar, --pre-hook / --post-hook = scripts"
+        },
+        {
+          "title": "Convertir formatos PFX",
+          "description": "Convierte clave y certificado a formato PFX/PKCS12",
+          "command": "openssl pkcs12 -export -in cert.pem -inkey key.pem -out cert.pfx",
+          "example": "openssl pkcs12 -export -in cert.pem -inkey key.pem -out cert.pfx -passout pass:",
+          "tags": ["certificados", "openssl", "pfx", "pkcs12", "convertir"],
+          "notes": "-passout pass: = sin contrasena, -chain = incluir cadena completa"
+        },
+        {
+          "title": "Obtener huella digital",
+          "description": "Muestra la huella SHA256 del certificado",
+          "command": "openssl x509 -in cert.pem -fingerprint -sha256 -noout",
+          "example": "openssl x509 -in cert.pem -fingerprint -md5 -noout",
+          "tags": ["certificados", "openssl", "huella", "fingerprint"],
+          "notes": "-sha256 / -md5 = algoritmo de hash para la huella"
+        },
+        {
+          "title": "Verificar cadena de confianza",
+          "description": "Verifica que un certificado sea valido contra una CA",
+          "command": "openssl verify -CAfile ca.pem -untrusted intermediate.pem cert.pem",
+          "example": "openssl verify -CApath /etc/ssl/certs cert.pem",
+          "tags": ["certificados", "openssl", "cadena", "verificar", "ca"],
+          "notes": "-CAfile = CA raiz, -untrusted = intermedias, -CApath = directorio de CAs"
+        }
+      ]
+    },
+    {
+      "name": "cron",
+      "description": "Programacion de tareas con cron y systemd timers",
+      "commands": [
+        {
+          "title": "Editar crontab",
+          "description": "Abre el editor para modificar las tareas del usuario actual",
+          "command": "crontab -e",
+          "example": "crontab -u root -e",
+          "tags": ["cron", "crontab", "editar", "tareas"],
+          "notes": "-u = usuario especifico, -l = listar, -r = eliminar"
+        },
+        {
+          "title": "Listar crontab",
+          "description": "Muestra las tareas programadas del usuario actual",
+          "command": "crontab -l",
+          "example": "crontab -u www-data -l",
+          "tags": ["cron", "crontab", "listar", "tareas"],
+          "notes": "Para ver tareas del sistema revisar /etc/crontab y /etc/cron.d/"
+        },
+        {
+          "title": "Formato de cron",
+          "description": "minuto hora dia_mes mes dia_semana comando",
+          "command": "30 2 * * * /usr/bin/backup.sh",
+          "example": "0 */6 * * * /usr/bin/actualizar.sh",
+          "tags": ["cron", "formato", "sintaxis", "ejemplo"],
+          "notes": "*/N = cada N, 1-5 = rango, 1,3,5 = lista, * = siempre"
+        },
+        {
+          "title": "Expresion cron: cada hora",
+          "description": "Ejecuta un comando al inicio de cada hora",
+          "command": "0 * * * * /ruta/comando",
+          "example": "0 * * * * /usr/bin/healthcheck.sh",
+          "tags": ["cron", "ejemplo", "cada hora"],
+          "notes": "El primer 0 = minuto cero, * = cada hora/dia/mes/dia-sem"
+        },
+        {
+          "title": "Expresion cron: diario a las 3am",
+          "description": "Ejecuta un comando todos los dias a las 3 de la manana",
+          "command": "0 3 * * * /ruta/comando",
+          "example": "0 3 * * * /usr/bin/backup.sh",
+          "tags": ["cron", "ejemplo", "diario", "madrugada"],
+          "notes": "Horario en 24h. 0 3 = 3:00 AM"
+        },
+        {
+          "title": "Systemd timer: ver timers",
+          "description": "Lista los timers de systemd activos y su proxima ejecucion",
+          "command": "systemctl list-timers",
+          "example": "systemctl list-timers --all",
+          "tags": ["cron", "systemd", "timers", "lista"],
+          "notes": "--all = incluir inactivos, --next = solo proxima ejecucion"
+        },
+        {
+          "title": "Systemd timer: crear timer",
+          "description": "Crea un timer que ejecuta un servicio en un horario",
+          "command": "systemctl enable --now tarea.timer",
+          "example": "systemctl start backup.timer",
+          "tags": ["cron", "systemd", "timers", "crear"],
+          "notes": "Requiere crear .timer y .service en /etc/systemd/system/"
+        },
+        {
+          "title": "Ejecucion unica con at",
+          "description": "Programa un comando para ejecutarse una sola vez en el futuro",
+          "command": "echo 'comando' | at now + 1 hour",
+          "example": "echo 'shutdown -h now' | at 23:00",
+          "tags": ["cron", "at", "unico", "programar"],
+          "notes": "atq = lista tareas pendientes, atrm <id> = cancelar tarea"
+        },
+        {
+          "title": "Logs de cron",
+          "description": "Revisa si las tareas de cron se ejecutaron correctamente",
+          "command": "grep CRON /var/log/syslog",
+          "example": "journalctl -u cron.service",
+          "tags": ["cron", "logs", "bitacora", "verificar"],
+          "notes": "En sistemas con systemd: journalctl -u cron.service"
+        },
+        {
+          "title": "Permisos de cron",
+          "description": "Controla que usuarios pueden usar cron",
+          "command": "cat /etc/cron.allow",
+          "example": "echo 'usuario' | sudo tee -a /etc/cron.allow",
+          "tags": ["cron", "permisos", "seguridad", "usuarios"],
+          "notes": "/etc/cron.allow = lista blanca, /etc/cron.deny = lista negra"
+        }
+      ]
+    },
+    {
+      "name": "base-de-datos",
+      "description": "Administracion de bases de datos relacionales",
+      "commands": [
+        {
+          "title": "Conectar a MySQL",
+          "description": "Conecta al shell interactivo de MySQL",
+          "command": "mysql -u usuario -p",
+          "example": "mysql -h localhost -u root -p",
+          "tags": ["base-datos", "mysql", "conectar", "shell"],
+          "notes": "-h = host, -P = puerto (default 3306), -D = base de datos"
+        },
+        {
+          "title": "Listar bases MySQL",
+          "description": "Muestra todas las bases de datos en el servidor MySQL",
+          "command": "SHOW DATABASES;",
+          "example": "mysql -u root -p -e 'SHOW DATABASES;'",
+          "tags": ["base-datos", "mysql", "listar", "bases"],
+          "notes": "Ejecutar dentro del shell de MySQL o con -e desde bash"
+        },
+        {
+          "title": "Tablas de MySQL",
+          "description": "Lista las tablas de una base de datos",
+          "command": "SHOW TABLES;",
+          "example": "mysql -u root -p basedatos -e 'SHOW TABLES;'",
+          "tags": ["base-datos", "mysql", "tablas", "listar"],
+          "notes": "Usar USE basedatos; primero o conectarse directamente a la BD"
+        },
+        {
+          "title": "Consulta en MySQL",
+          "description": "Ejecuta una consulta SQL directa desde terminal",
+          "command": "mysql -u root -p -e 'SELECT * FROM tabla LIMIT 10;' basedatos",
+          "example": "mysql -u root -p -e 'SHOW PROCESSLIST;'",
+          "tags": ["base-datos", "mysql", "consulta", "sql"],
+          "notes": "SHOW PROCESSLIST = ver queries activas, KILL <id> = matar query"
+        },
+        {
+          "title": "Conectar a Postgres",
+          "description": "Conecta al shell interactivo de PostgreSQL",
+          "command": "psql -U usuario -d basedatos",
+          "example": "psql -h localhost -U postgres",
+          "tags": ["base-datos", "postgres", "conectar", "shell"],
+          "notes": "-h = host, -p = puerto (default 5432), -d = base de datos"
+        },
+        {
+          "title": "Listar bases Postgres",
+          "description": "Muestra todas las bases de datos en PostgreSQL",
+          "command": "\\l",
+          "example": "psql -U postgres -c '\\l'",
+          "tags": ["base-datos", "postgres", "listar", "bases"],
+          "notes": "\\l es comando interno de psql, -c ejecuta desde bash"
+        },
+        {
+          "title": "Tablas en Postgres",
+          "description": "Lista las tablas de la base de datos actual",
+          "command": "\\dt",
+          "example": "psql -U postgres -d basedatos -c '\\dt'",
+          "tags": ["base-datos", "postgres", "tablas", "listar"],
+          "notes": "\\dt+ = con detalles, \\d tabla = describe columna"
+        },
+        {
+          "title": "Redis: conectar",
+          "description": "Conecta al servidor Redis y abre el CLI",
+          "command": "redis-cli",
+          "example": "redis-cli -h 192.168.1.100 -p 6379",
+          "tags": ["base-datos", "redis", "conectar", "shell"],
+          "notes": "-a = auth (contrasena), --raw = output sin formato, -n = base de datos"
+        },
+        {
+          "title": "Redis: monitorear",
+          "description": "Monitorea todos los comandos ejecutandose en Redis en tiempo real",
+          "command": "redis-cli MONITOR",
+          "example": "redis-cli -h localhost MONITOR",
+          "tags": ["base-datos", "redis", "monitorear", "tiempo real"],
+          "notes": "Muestra todas las operaciones en vivo. Util para depuracion"
+        },
+        {
+          "title": "Postgres: procesos activos",
+          "description": "Muestra las conexiones y consultas activas en Postgres",
+          "command": "SELECT * FROM pg_stat_activity;",
+          "example": "psql -U postgres -c 'SELECT pid,state,query FROM pg_stat_activity;'",
+          "tags": ["base-datos", "postgres", "procesos", "activos"],
+          "notes": "pg_terminate_backend(pid) = matar conexion, state = active/idle"
+        }
+      ]
+    },
+    {
+      "name": "virtualizacion",
+      "description": "Gestion de maquinas virtuales con KVM y libvirt",
+      "commands": [
+        {
+          "title": "Listar VMs",
+          "description": "Muestra todas las maquinas virtuales del sistema",
+          "command": "virsh list --all",
+          "example": "virsh list --state-running",
+          "tags": ["virtualizacion", "virsh", "kvm", "vms", "lista"],
+          "notes": "--all = incluye apagadas, --state-running = solo activas"
+        },
+        {
+          "title": "Iniciar VM",
+          "description": "Enciende una maquina virtual",
+          "command": "virsh start <nombre_vm>",
+          "example": "virsh start ubuntu-server",
+          "tags": ["virtualizacion", "virsh", "kvm", "iniciar"],
+          "notes": "Requiere que la VM exista y este apagada"
+        },
+        {
+          "title": "Apagar VM",
+          "description": "Apaga una maquina virtual de forma controlada",
+          "command": "virsh shutdown <nombre_vm>",
+          "example": "virsh shutdown ubuntu-server",
+          "tags": ["virtualizacion", "virsh", "kvm", "apagar"],
+          "notes": "destroy = forzoso (como desconectar cable), shutdown = ACPI"
+        },
+        {
+          "title": "Conectar a VM (consola)",
+          "description": "Abre la consola grafica de una maquina virtual",
+          "command": "virt-viewer <nombre_vm>",
+          "example": "virsh console <nombre_vm>",
+          "tags": ["virtualizacion", "virt-viewer", "consola", "kvm"],
+          "notes": "virt-viewer = ventana VNC, virsh console = serial text-only"
+        },
+        {
+          "title": "Info de VM",
+          "description": "Muestra configuracion detallada de una maquina virtual",
+          "command": "virsh dominfo <nombre_vm>",
+          "example": "virsh dominfo ubuntu-server",
+          "tags": ["virtualizacion", "virsh", "info", "kvm"],
+          "notes": "Muestra CPU, memoria, estado, UUID, y tipo de hypervisor"
+        },
+        {
+          "title": "Editar config de VM",
+          "description": "Abre la configuracion XML de la VM en el editor",
+          "command": "virsh edit <nombre_vm>",
+          "example": "virsh edit ubuntu-server",
+          "tags": ["virtualizacion", "virsh", "editar", "config", "kvm"],
+          "notes": "Los cambios toman efecto al reiniciar la VM"
+        },
+        {
+          "title": "Snapshots de VM",
+          "description": "Lista los snapshots disponibles de una maquina virtual",
+          "command": "virsh snapshot-list <nombre_vm>",
+          "example": "virsh snapshot-create-as <nombre_vm> antes_actualizar",
+          "tags": ["virtualizacion", "virsh", "snapshots", "kvm"],
+          "notes": "snapshot-create = crear, snapshot-revert = restaurar, snapshot-delete = eliminar"
+        },
+        {
+          "title": "Migrar VM en vivo",
+          "description": "Migra una VM a otro host sin interrupcion",
+          "command": "virsh migrate --live <vm> qemu+ssh://destino/system",
+          "example": "virsh migrate --live --verbose web1 qemu+ssh://node2/system",
+          "tags": ["virtualizacion", "virsh", "migrar", "kvm", "live"],
+          "notes": "--live = sin detener, --verbose = barra de progreso, --timeout = segundos"
+        },
+        {
+          "title": "Uso de recursos por VM",
+          "description": "Muestra CPU y memoria usada por cada maquina virtual",
+          "command": "virt-top",
+          "example": "virt-top -d 2",
+          "tags": ["virtualizacion", "virt-top", "recursos", "kvm"],
+          "notes": "-d = intervalo en segundos, similar a top pero para VMs"
+        },
+        {
+          "title": "Crear VM desde CLI",
+          "description": "Crea una nueva maquina virtual con virt-install",
+          "command": "virt-install --name vm --ram 2048 --vcpus 2 --disk size=20 --cdrom /ruta/iso",
+          "example": "virt-install --name ubuntu --ram 4096 --vcpus 4 --disk size=50 --os-variant ubuntu24.04",
+          "tags": ["virtualizacion", "virt-install", "crear", "kvm"],
+          "notes": "--network default = red NAT, --graphics vnc = acceso VNC"
+        }
+      ]
+    },
+    {
+      "name": "monitoreo",
+      "description": "Herramientas de monitoreo y observabilidad",
+      "commands": [
+        {
+          "title": "Prometheus: estado",
+          "description": "Verifica el estado del servidor Prometheus via API",
+          "command": "curl http://localhost:9090/api/v1/status/runtimeinfo",
+          "example": "curl -s http://localhost:9090/api/v1/targets | jq '.data.activeTargets[].labels'",
+          "tags": ["monitoreo", "prometheus", "estado", "api"],
+          "notes": "Puerto default 9090. /targets = estado de exporters"
+        },
+        {
+          "title": "Prometheus: consulta",
+          "description": "Ejecuta una consulta PromQL en Prometheus",
+          "command": "curl 'http://localhost:9090/api/v1/query?query=<promql>'",
+          "example": "curl 'http://localhost:9090/api/v1/query?query=up' | jq",
+          "tags": ["monitoreo", "prometheus", "promql", "consulta"],
+          "notes": "Reemplazar <promql> con la expresion. Ej: node_cpu_seconds_total"
+        },
+        {
+          "title": "Node Exporter: metricas",
+          "description": "Muestra las metricas del sistema expuestas por node_exporter",
+          "command": "curl http://localhost:9100/metrics",
+          "example": "curl -s http://localhost:9100/metrics | grep -i cpu",
+          "tags": ["monitoreo", "node-exporter", "metricas", "sistema"],
+          "notes": "Puerto default 9100. Expone CPU, memoria, disco, red y mas"
+        },
+        {
+          "title": "Grafana: health",
+          "description": "Verifica que Grafana este funcionando correctamente",
+          "command": "curl http://localhost:3000/api/health",
+          "example": "curl -s http://localhost:3000/api/health | jq",
+          "tags": ["monitoreo", "grafana", "health", "estado"],
+          "notes": "Puerto default 3000. user/pass default: admin/admin"
+        },
+        {
+          "title": "Ver procesos del sistema",
+          "description": "Muestra procesos del sistema en tiempo real",
+          "command": "htop",
+          "example": "htop -u usuario",
+          "tags": ["monitoreo", "htop", "procesos", "tiempo real"],
+          "notes": "-u = filtrar por usuario, -t = arbol, F5 = vista de arbol"
+        },
+        {
+          "title": "Alertmanager: estado",
+          "description": "Verifica alertas activas en Alertmanager",
+          "command": "curl http://localhost:9093/api/v2/alerts",
+          "example": "curl -s http://localhost:9093/api/v2/alerts | jq '. [].labels.alertname'",
+          "tags": ["monitoreo", "alertmanager", "alertas", "prometheus"],
+          "notes": "Puerto default 9093. /api/v2/alerts = todas las alertas activas"
+        },
+        {
+          "title": "Prueba de puertos con nc",
+          "description": "Verifica si un puerto esta abierto en un host remoto",
+          "command": "nc -zv <host> <puerto>",
+          "example": "nc -zv google.com 443",
+          "tags": ["monitoreo", "nc", "puertos", "conectividad"],
+          "notes": "-z = solo escanear, -v = verbose, -w = timeout en segundos"
+        },
+        {
+          "title": "Estadisticas de red",
+          "description": "Monitorea el trafico de red en tiempo real por interfaz",
+          "command": "iftop",
+          "example": "iftop -i eth0 -n",
+          "tags": ["monitoreo", "iftop", "red", "trafico"],
+          "notes": "-i = interfaz, -n = no resolver DNS, -P = mostrar puertos"
+        },
+        {
+          "title": "Lista de puertos abiertos",
+          "description": "Escanea los puertos abiertos en un host",
+          "command": "nmap -sT localhost",
+          "example": "nmap -sV -p 1-1000 192.168.1.1",
+          "tags": ["monitoreo", "nmap", "puertos", "escanear"],
+          "notes": "-sT = TCP connect, -sU = UDP, -sV = detectar versiones"
+        },
+        {
+          "title": "Logs en vivo con lnav",
+          "description": "Navegador de logs multiple con seguimiento en tiempo real",
+          "command": "lnav /var/log/",
+          "example": "lnav /var/log/nginx/access.log /var/log/nginx/error.log",
+          "tags": ["monitoreo", "lnav", "logs", "tiempo real"],
+          "notes": "Soporta multiples archivos, vista dividida, busqueda y filtros"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+================================================================================
+                         SYSADMIN-CLI DEMO
+================================================================================
+
+## 1. VISTA INICIAL (Categorías)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ sysadmin-cli                                                   [q] Salir    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  01.  disco         Diagnostico y gestion de discos (12)                   │
+│  02.  memoria       Monitoreo de memoria RAM y swap (8)                    │
+│  03.  red           Puertos, conectividad y diagnostico (12)               │
+│  04.  procesos      Administracion y monitoreo de procesos (10)            │
+│  05.  hardware      Componentes y dispositivos del sistema (10)            │
+│  06.  kernel        Modulos y parametros del kernel (8)                    │
+│  07.  archivos      Sistemas de archivos y operaciones (10)                │
+│  08.  bitacoras     Visualizacion y analisis de logs (8)                   │
+│  09.  servicios     Administracion de servicios con systemd (10)           │
+│  10.  rendimiento   Analisis y monitoreo del rendimiento (10)              │
+│  11.  seguridad     Politicas, firewall y auditoria (12)                   │
+│  12.  contenedores  Gestion de contenedores Docker y Podman (10)           │
+│  13.  paquetes      Gestion de paquetes y actualizaciones (10)             │
+│  14.  respaldo      Herramientas de respaldo, copias (10)                  │
+│  15.  certificados  Gestion de certificados SSL/TLS (10)                   │
+│  16.  cron          Programacion de tareas (10)                            │
+│  17.  base-de-datos Administracion de bases de datos (10)                  │
+│  18.  virtualizacion Gestion de maquinas virtuales (10)                     │
+│  19.  monitoreo     Herramientas de monitoreo y observabilidad (10)        │
+│                                                                             │
+│  Mostrando 1 de 19                                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ [/] Buscar  [up/down] Navegar  [enter] Seleccionar  [q] Salir             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+↓ Enter en 'disco'
+
+================================================================================
+
+## 2. VISTA DE CATEGORÍA (Comandos)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ sysadmin-cli  >  disco                                         [q] Salir   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   COMANDO              DESCRIPCION                                         │
+│   ────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│   df -h               Espacio en disco                                      │
+│   du -sh *            Espacio por directorio                               │
+│   lsblk               Dispositivos de bloque                               │
+│   fdisk -l            Tabla de particiones                                 │
+│   blkid               UUID de particiones                                  │
+│   smartctl -a         Estado SMART del disco                               │
+│   iostat -x 1         Estadisticas de E/S                                  │
+│   lsof +L1            Archivos con links rotos                             │
+│   find / -size        Archivos grandes                                     │
+│   lsof | grep deleted Archivos borrados en uso                             │
+│   mount | column -t   Puntos de montaje                                    │
+│   tune2fs -l          Informacion del FS                                   │
+│                                                                             │
+│   Mostrando 1 de 12                                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ [/] Buscar  [up/down] Navegar  [enter] Detalle  [esc] Atras               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+↓ Enter en 'df -h'
+
+================================================================================
+
+## 3. VISTA DETALLE (Comando completo)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ sysadmin-cli  >  disco  >  df -h                               [q] Salir   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─ df -h ────────────────────────────────────────────────────────────────┐│
+│  │                                                                        ││
+│  │  Muestra el espacio usado y disponible en particiones montadas        ││
+│  │                                                                        ││
+│  │  Comando:                                                             ││
+│  │    $ df -h                                                            ││
+│  │                                                                        ││
+│  │  Ejemplo:                                                             ││
+│  │    $ df -h /var/log                                                   ││
+│  │                                                                        ││
+│  │  Etiquetas:                                                           ││
+│  │    disco, espacio, uso, lleno, particiones                            ││
+│  │                                                                        ││
+│  │  Notas:                                                               ││
+│  │    -h = formato legible, -T = tipo de FS, --total = suma total        ││
+│  │                                                                        ││
+│  └────────────────────────────────────────────────────────────────────────┘│
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ [c] Copiar comando  [esc] Atras                          Copiado!          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+
+## 4. MODO BÚSQUEDA
+
+Presionar '/' activa búsqueda en tiempo real:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ sysadmin-cli                                                   [q] Salir    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  01.  disk          Diagnostico y gestion de discos (12)                   │
+│  02.  memoria       Monitoreo de memoria RAM y swap (8)                    │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ > buscar espacio                                           2 resultados    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+
+## 5. USO EN LÍNEA DE COMANDOS
+
+$ sysadmin-cli list
+
+Categorias disponibles (19):
+
+  disco         Diagnostico y gestion de discos y almacenamiento
+  memoria       Monitoreo de memoria RAM y swap
+  red           Puertos, conectividad y diagnostico de red
+  ...
+
+================================================================================
+
+$ sysadmin-cli disco --cli
+
+=== disco ===
+Diagnostico y gestion de discos y almacenamiento
+
+  df -h
+    Muestra el espacio usado y disponible en particiones montadas
+    Ejemplo: $ df -h /var/log
+
+  du -sh *
+    Calcula el espacio usado por directorios y archivos
+    Ejemplo: $ du -sh /var/log/* | sort -rh
+
+  lsblk
+    Lista todos los discos y particiones del sistema
+    Ejemplo: $ lsblk -f
+
+  ...
+
+================================================================================
+
+$ sysadmin-cli search "puertos"
+
+Resultados para 'puertos' (4):
+
+  [red] ss -tlnp
+        Muestra los puertos TCP abiertos en el equipo
+
+  [red] ss -ulnp
+        Muestra los puertos UDP abiertos en el equipo
+
+  [red] netstat -tulpn
+        Lista todos los puertos abiertos con sus procesos
+
+  [red] lsof -i -P -n
+        Muestra que procesos estan usando cada puerto
+
+================================================================================
+
+$ sysadmin-cli red --json | jq '.categories[0].commands[0].command'
+
+"ss -tlnp"
+
+================================================================================

@@ -1,0 +1,10 @@
+sysadmin-cli
+*.test
+*.out
+vendor/
+dist/
+.DS_Store
+.idea/
+*.swp
+*.swo
+*~

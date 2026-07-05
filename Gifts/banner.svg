@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16162A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1A2E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="400" fill="url(#bgGrad)"/>
+  
+  <!-- Titulo principal -->
+  <text x="600" y="80" font-size="60" font-weight="bold" text-anchor="middle" fill="#00BFFF" font-family="monospace">
+    sysadmin-cli
+  </text>
+  
+  <!-- Subtitulo -->
+  <text x="600" y="130" font-size="24" text-anchor="middle" fill="#87CEEB" font-family="monospace">
+    Manual rápido de comandos para Sysadmin
+  </text>
+  
+  <!-- Caracteristicas -->
+  <g font-size="16" font-family="monospace" fill="#E0E0E0">
+    <!-- Fila 1 -->
+    <circle cx="50" cy="190" r="5" fill="#00FF87"/>
+    <text x="70" y="195">TUI interactivo con Bubble Tea</text>
+    
+    <!-- Fila 2 -->
+    <circle cx="50" cy="230" r="5" fill="#00FF87"/>
+    <text x="70" y="235">19 categorías, ~200 comandos</text>
+    
+    <!-- Fila 3 -->
+    <circle cx="650" cy="190" r="5" fill="#00FF87"/>
+    <text x="670" y="195">Búsqueda en tiempo real</text>
+    
+    <!-- Fila 4 -->
+    <circle cx="650" cy="230" r="5" fill="#00FF87"/>
+    <text x="670" y="235">100% local, sin telemetría</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="600" y="340" font-size="14" text-anchor="middle" fill="#888888" font-family="monospace">
+    Comandos personalizables • Modo JSON para scripting • Compatible con pipes
+  </text>
+  
+  <!-- Links/Info -->
+  <text x="600" y="380" font-size="12" text-anchor="middle" fill="#666666" font-family="monospace">
+    github.com/user/sysadmin-cli • MIT License
+  </text>
+</svg>

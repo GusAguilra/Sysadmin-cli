@@ -46,6 +46,6 @@
   
   <!-- Links/Info -->
   <text x="600" y="380" font-size="12" text-anchor="middle" fill="#666666" font-family="monospace">
-    github.com/user/sysadmin-cli • MIT License
+    github.com/GusAguilra/Sysadmin-cli • GPL v3
   </text>
 </svg>

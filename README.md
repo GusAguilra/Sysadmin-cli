@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue.svg">
+  <img src="https://img.shields.io/badge/license-GPLv3-blue.svg">
   <img src="https://img.shields.io/badge/go-1.26-blue">
   <img src="https://img.shields.io/badge/status-stable-green">
 </p>
